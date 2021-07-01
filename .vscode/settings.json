@@ -1,0 +1,10 @@
+{
+    "liveServer.settings.https": {
+      "enable": true,
+      "cert": "F:\\Projects\\JS\\Product\\FB Realtime DB\\localhost.pem",
+      "key": "F:\\Projects\\JS\\Product\\FB Realtime DB\\localhost.key",
+      "passphrase": "123456"
+    }
+  }
+
+ 
