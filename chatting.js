@@ -1,134 +1,136 @@
-let send = document.getElementById("send")
-let container = document.getElementById("container")
-
-// this one
 var db = firebase.firestore()
 
-send.addEventListener("click", () => {
-  var provider = new firebase.auth.FacebookAuthProvider();
 
-  firebase
-    .auth()
-    .signInWithPopup(provider)
-    .then((result) => {
+// function savingMess() {
+//     var sender = document.querySelector('.senderName_Input').value
+//     var message = document.querySelector('.message').value
 
-      var credential = result.credential;
+//     if (message !== "" && sender !== "") {
+//         db.collection("messages").add({
+//             sender: sender,
+//             message: message,
+//             date: moment().format("YYYY-MM-DD HH:mm")
+//         })
+//             .then((docRef) => {
+//                 console.log("Document written with ID: ", docRef.id);
+//             })
+//             .catch((error) => {
+//                 console.error("Error adding document: ", error);
+//             });
+//     }
+//     else {
+//         console.log('Enter your message or your name');
+//     }
+// }
 
-      // The signed-in user info.
-      var user = result.user;
-      let html = `
-    <h1>${user.uid}</h1>
-    <img src=${user.photoURL}>
-    `
-      container.innerHTML += html
+// function sending() {
+//     savingMess()
 
-      console.log(user)
+//     // Get sender name and message
+//     db.collection("messages").get().then((querySnapshot) => {
+//         querySnapshot.forEach((doc) => {
+//             // doc.data() is never undefined for query doc snapshots
+//             var senderData = doc.data()
+//             var messageBox = document.querySelector('.messageBox')
 
-      // Saving USER INFOMATION after sending
+//             console.log(doc.data());
 
-      db.collection("users").add({
-        name: user.displayName,
-        email: user.email,
-        imgURL: user.photoURL
-      })
-        .then((docRef) => {
-          console.log("Document written with ID: ", docRef.id);
-        })
-        .catch((error) => {
-          console.error("Error adding document: ", error);
-        });
+//             var html = `
+//             <div class="senderBox">
+//                 <div class="sender-name">${senderData.sender} :</div>
+//                 <div class="sender-message">${senderData.message}</div>
+//             </div>    
+//             `
+//             messageBox.innerHTML += html
+//         });
+//     });
+// }
 
+var name = window.prompt('Enter your name')
 
+// getting all message and listening realtime chat
+db.collection("messages").onSnapshot(function (snapshot) {
+    snapshot.docChanges().forEach(function (change, ind) {
 
-      // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-      var accessToken = credential.accessToken;
+        var data = change.doc.data()
+        var boxContainer = document.querySelector('.box_container')
 
-      // ...
+        // if new message added
+        if (change.type === "added") {
+            if (data.senderName == name) {       // if sender is me
+                var html = `
+                <div class="senderBox-right">
+                    <div class="sender-name">${data.senderName}: </div>
+                    <div class="sender-message">${data.message}</div>
+                </div>    
+                `
+                boxContainer.innerHTML += html
+            }
+            else {
+                var html = `
+                <div class="senderBox-left">
+                    <div class="sender-name">${data.senderName}: </div>
+                    <div class="sender-message">${data.message}</div>
+                </div>    
+                `
+                boxContainer.innerHTML += html
+            }
+            if (snapshot.docChanges().length - 1 == ind) { // we will scoll down on last message
+                // auto scroll
+                boxContainer.animate({ scrollTop: boxContainer.prop("scrollHeight") }, 1000);
+            }
+        }
+        if (change.type === "modified") {
+
+        }
+        if (change.type === "removed") {
+
+        }
     })
-    .catch((error) => {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-
-      // ...
-    });
 })
 
+function sending(object) {
+    db.collection("messages").add(object).then(added => {
+        console.log("message sent ", added)
+    }).catch(err => {
+        console.err("Error occured", err)
+    })
+}
 
-// (1)
-// SETTING(doc)
-// If the document does not exist, it will be created. If the document does exist, its contents will be overwritten with the newly provided data, unless you specify that the data should be merged into the existing document
+var sendingBtn = document.querySelector('.sending-btn')
 
-// db.collection("cities").doc("LA").set({
-//   name: "Los Angeles",
-//   state: "CA",
-//   country: "USA"
-// })
+sendingBtn.onclick = function () {
+    var message = document.querySelector('.message').value
+    if (message) {
+        sending({
+            senderName: name,
+            message: message,
+            data: moment().format("YYYY-MM-DD HH:mm")
+        })
+        message = ""
+    }
+    else {
+        console.log("Enter your message");
+    }
+}
 
-// db.collection("cities").doc("VN").set({
-//   name: "VN",
-//   state: "HaNoi",
-//   country: "VietNam"
-// })
-// .then(() => {
-//   console.log("Document successfully written!");
-// })
-// .catch((error) => {
-//   console.error("Error writing document: ", error);
-// });
+$('.message').keyup(function(event) {
 
-// (2)
-// UPDATING(fields)
-// To update some fields of a document without overwriting the entire document, use the update() method:
+    // get key code of enter
+    if(event.keyCode == 13){ // enter
+       var message = $('.message').val();
 
-// var UserUpdating = db.collection('users').doc('VGoHZqmAY1UjDFMZC91u');
-// UserUpdating.update({
-//   Dream: "Investor"
-// })
-//   .then(() => {
-//     console.log("Document successfully updated!");
-//   })
-//   .catch((error) => {
-//     // The document probably doesn't exist.
-//     console.error("Error updating document: ", error);
-//   });
+        if(message){
+            // insert message 
 
+            sending({
+                senderName : name,
+                message : message,
+                date : moment().format("YYYY-MM-DD HH:mm")
+            })
 
-// (3)
-// GETTING 
-// Get all documents in a collection
-// db.collection("users").get().then((querySnapshot) => {
-//   querySnapshot.forEach((doc) => {
-//       // doc.data() is never undefined for query doc snapshots
-//       console.log(doc.id, " => ", doc.data());
-//   });
-// });
-
-// Get data of 1 doc
-// db.collection("users").doc("TTLcWdFvbhNQIxieoXoK")
-//     .onSnapshot((doc) => {
-//         console.log("Current data: ", doc.data());
-//     });
-
-
-// (4)
-// DELETING
-// Delete documents
-// db.collection("cities").doc("DC").delete().then(() => {
-//   console.log("Document successfully deleted!");
-// }).catch((error) => {
-//   console.error("Error removing document: ", error);
-// });
-
-
-// Delete fields
-// var cityRef = db.collection('cities').doc('BJ');
-
-// // Remove the 'capital' field from the document
-// var removeCapital = cityRef.update({
-//     capital: firebase.firestore.FieldValue.delete()
-// });
+            $('.message').val("")
+        }
+    }
+ 
+})
