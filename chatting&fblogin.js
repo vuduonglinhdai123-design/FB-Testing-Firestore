@@ -1,9 +1,9 @@
-let login = document.getElementById("send")
+let login = document.getElementById("login")
 let container = document.getElementById("container")
 var db = firebase.firestore()
 
 
-
+// Ác vc :)
 login.addEventListener("click", () => {
     var provider = new firebase.auth.FacebookAuthProvider();
 
@@ -37,7 +37,6 @@ login.addEventListener("click", () => {
                         message: message,
                         date: moment().format("YYYY-MM-DD HH:mm"),
                         docMessID: user.uid
-
                     })
                 }
                 else {
@@ -89,18 +88,7 @@ function sending(object) {
     })
 }
 
-// function getUserUids() {
-//     db.collection("users").get().then((querySnapshot) => {
-//         querySnapshot.forEach((doc) => {
-//             // doc.data() is never undefined for query doc snapshots
-//             var userUid = doc.data().docUserID
-//             var myArray = []
-//         });
-//     });
-// }
-
-// getUserUids()
-
+// Cái đoạn code thêm tin nhắn vào firestore ở đâu ta ?
 function render(userUid) {
     db.collection("messages").onSnapshot(function (snapshot) {
         snapshot.docChanges().forEach(function (change, ind) {
@@ -145,4 +133,5 @@ function render(userUid) {
         })
     })
 }
+
 

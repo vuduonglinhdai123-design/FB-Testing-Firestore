@@ -17,7 +17,8 @@
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <link rel="stylesheet" href="index.css">
+  <!-- <link rel="stylesheet" href="index.css"> -->
+  <link rel="stylesheet" href="messenger.css">
   <style>
     html,
     body {
@@ -38,14 +39,14 @@
 
 <body onkeypress="return event.keyCode != 13">
   <!-- FB LOGIN -->
-  <button id="send">Send</button>
+  <!-- <button id="login">Login</button>
 
   <div id="container" class="container">
     
-  </div>
+  </div> -->
 
   <!-- CHATTING -->
-
+  <!-- 
   <div class="container-fluid row">
 
     <form class="col col-lg-6">
@@ -63,6 +64,44 @@
       </div>
     </div>
   </div>
+ -->
+
+  <div class="container-fluid row">
+    <div class="boxUsers-container col col-lg-3">
+      <!-- <div class="boxUser">
+        <div class="userAvatar">
+          <img src="ironman.jpg" alt="">
+        </div>
+        <h5 class="userName">UserName</h5>
+
+      </div>
+
+      <div class="boxUser">
+        <div class="userAvatar">123</div>
+        <h5>UserName</h5>
+
+      </div>
+
+      <div class="boxUser">
+        <div class="userAvatar">123</div>
+        <h5>UserName</h5>
+
+      </div>-->
+
+    </div>
+    <div class="boxMessage col col-lg-6">
+
+    </div>
+
+    <div class="form-container col col-lg-3">
+      <form>
+        <button type="button" class="btn btn-primary" onclick="login()">Login with Facebook</button>
+      </form>
+    </div>
+  </div>
+
+
+
 
 
 
@@ -108,8 +147,8 @@
 
   <!-- <script src="fbLogin.js"></script> -->
   <!-- <script src="chatting.js"></script> -->
-  <script src="chatting&fblogin.js"></script>
-  <!-- <script src="test.js"></script> -->
+  <!-- <script src="chatting&fblogin.js"></script> -->
+  <script src="messenger.js"></script>
 
 
 </body>
